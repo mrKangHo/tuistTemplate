@@ -1,10 +1,9 @@
+// Workspace.swift
 import ProjectDescription
-import ProjectDescriptionHelpers
 
 let workspace = Workspace(
-    name: ENV.workspaceName,
+    name: "SampleApp",
     projects: [
-        "PRJ/\(ModuleNames.App.name)"
+        "./PRJ/App"
     ]
 )
-

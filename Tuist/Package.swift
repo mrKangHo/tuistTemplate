@@ -13,8 +13,11 @@ import PackageDescription
 #endif
 
 let package = Package(
-    name: "TuistTemplate",
+    name: "MyApp",
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture", exact: "1.15.0")
+        // Add your own dependencies here:
+         .package(url: "https://github.com/Alamofire/Alamofire", from: "5.0.0"),
+         .package(url: "https://github.com/airbnb/lottie-spm", from: "4.5.0")
+        // You can read more about dependencies here: https://docs.tuist.io/documentation/tuist/dependencies
     ]
 )

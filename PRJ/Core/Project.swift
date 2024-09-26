@@ -1,4 +1,6 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.makeModule(.ThirdPartyLib)
+let project = Project.makeProject(Module.Core)
+
+
