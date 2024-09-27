@@ -12,6 +12,7 @@ extension Project {
             destinations: module.destinations,
             product: module.product,
             bundleId: module.bundleId,
+            deploymentTargets: ENV.deploymentTarget,
             infoPlist: module.infoPlist,
             sources: module.sources,
             resources: module.resources,
@@ -21,9 +22,10 @@ extension Project {
         if module.includeTesting {
             targets.append(.target(
                 name: "\(module.name)Tests",
-                destinations: .iOS,
+                destinations: module.destinations,
                 product: .unitTests,
                 bundleId: "\(module.bundleId)Tests",
+                deploymentTargets: ENV.deploymentTarget,
                 infoPlist: .default,
                 sources: ["Tests/**"],
                 resources: [],
