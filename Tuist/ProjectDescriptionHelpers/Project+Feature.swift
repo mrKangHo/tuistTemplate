@@ -1,5 +1,13 @@
 import ProjectDescription
 
+public extension Module {
+    enum Feature {
+        case Home
+        case Search
+        case MyPage
+    }
+}
+
 extension Module.Feature:ModuleProtocol {
     public var name: String {
         switch self {
@@ -11,7 +19,9 @@ extension Module.Feature:ModuleProtocol {
             return "MyPage"
         }
     }
-    
+    public var includeTesting: Bool {
+        return true
+    }
     public var destinations: Destinations {
         return .iOS
     }
@@ -28,7 +38,7 @@ extension Module.Feature:ModuleProtocol {
     }
     
     public var bundleId: String {
-        return "io.tuist.\(self.name)"
+        return "\(ENV.prefixBundleId).\(self.name)"
     }
     
     public var infoPlist: InfoPlist {
@@ -53,21 +63,19 @@ extension Module.Feature:ModuleProtocol {
     public var dependencies: [TargetDependency] {
         switch self {
         case .Home:
-            return [Module.Core.target,
-                    Module.Data.target,
-                    Module.Domain.target,
-                    Module.ThirdParty.target]
+            return [Module.Data.target,
+                    Module.Resources.target]
         case .Search:
-            return [Module.Core.target,
-                    Module.Data.target,
-                    Module.Domain.target,
-                    Module.ThirdParty.target]
+            return [Module.Data.target,
+                    Module.Resources.target]
         case .MyPage:
-            return [Module.Core.target,
-                    Module.Data.target,
-                    Module.Domain.target,
-                    Module.ThirdParty.target]
+            return [Module.Data.target,
+                    Module.Resources.target]
         }
+    }
+    
+    public var resourceSynthesizers: [ResourceSynthesizer] {
+        return .default
     }
     
      

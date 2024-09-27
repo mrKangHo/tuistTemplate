@@ -2,16 +2,7 @@
 import ProjectDescription
 
 
-public protocol ModuleProtocol {
-    var name: String { get }
-    var destinations:Destinations { get }
-    var product:Product { get }
-    var bundleId:String { get }
-    var infoPlist:InfoPlist { get }
-    var sources:SourceFilesList? { get }
-    var resources:ResourceFileElements? { get }
-    var dependencies:[TargetDependency] { get }
-}
+
 
 public enum Module {
     
@@ -19,16 +10,11 @@ public enum Module {
     case Core
     case Data
     case Domain
+    case Resources
     case ThirdParty
 }
 
-public extension Module {
-    enum Feature {
-        case Home
-        case Search
-        case MyPage
-    }
-}
+
 
 
 extension Module: ModuleProtocol {
@@ -42,9 +28,15 @@ extension Module: ModuleProtocol {
             return "Data"
         case .Domain:
             return "Domain"
+        case .Resources:
+            return "Resources"
         case .ThirdParty:
             return "ThirdParty"
         }
+    }
+    
+    public var includeTesting: Bool {
+        return false
     }
     
     public var destinations: Destinations {
@@ -61,13 +53,15 @@ extension Module: ModuleProtocol {
             return .framework
         case .Domain:
             return .framework
+        case .Resources:
+            return .framework
         case .ThirdParty:
             return .framework
         }
     }
     
     public var bundleId: String {
-        return "io.tuist.\(self.name)"
+        return "\(ENV.prefixBundleId).\(self.name)"
     }
     
     public var infoPlist: InfoPlist {
@@ -87,13 +81,30 @@ extension Module: ModuleProtocol {
             return .default
         case .Domain:
             return .default
+        case .Resources:
+            return .default
         case .ThirdParty:
             return .default
         }
     }
     
     public var sources: SourceFilesList? {
-        return ["Sources/**"]
+        
+        switch self {
+        case .App:
+            return ["Sources/**"]
+        case .Core:
+            return ["Sources/**"]
+        case .Data:
+            return ["Sources/**"]
+        case .Domain:
+            return ["Sources/**"]
+        case .Resources:
+            return ["Sources/**"]
+        case .ThirdParty:
+            return ["Sources/**"]
+        }
+        
     }
     
     public var resources: ResourceFileElements? {
@@ -109,11 +120,31 @@ extension Module: ModuleProtocol {
         case .Core:
             return []
         case .Data:
-            return []
+            return [Module.Core.target,
+                    Module.Domain.target]
         case .Domain:
-            return []
+            return [Module.Core.target]
+        case .Resources:
+            return [.SPM.Lottie]
         case .ThirdParty:
-            return [.external(name: "Lottie")]
+            return []
+        }
+    }
+    
+    public var resourceSynthesizers: [ResourceSynthesizer] {
+        switch self {
+        case .App:
+            return .default
+        case .Core:
+            return .default
+        case .Data:
+            return .default
+        case .Domain:
+            return .default
+        case .Resources:
+            return [.custom(name: "Lottie", parser: .json, extensions: ["lottie"])]
+        case .ThirdParty:
+            return .default
         }
     }
     
